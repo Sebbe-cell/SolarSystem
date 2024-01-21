@@ -1,7 +1,3 @@
-/* eslint-disable react/display-name */
-/* eslint-disable react/prop-types */
-/* eslint-disable react/no-unknown-property */
-
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
@@ -16,19 +12,33 @@ const Mercury = React.memo(() => {
     "/assets/mercury_map_8k.jpg",
   ]);
 
+  const orbitRef = useRef();
   const mercuryRef = useRef();
   const clockRef = useRef(new THREE.Clock());
 
   const updateMercuryPosition = useCallback(() => {
     // Calculate the Mercury's position based on its angle from the Sun.
     const angle = clockRef.current.getElapsedTime() * 0.2;
-    const distance = 8;
+    const distance = 10;
     const x = Math.sin(angle) * distance;
     const z = Math.cos(angle) * distance;
 
     mercuryRef.current.position.set(x, 0, z);
 
     mercuryRef.current.rotation.y += 0.004;
+
+    // Update the orbit line
+    const points = [];
+    const segments = 128;
+    for (let i = 0; i <= segments; i++) {
+      const theta = (i / segments) * Math.PI * 2;
+      const orbitRadius = distance;
+      const orbitX = Math.sin(theta) * orbitRadius;
+      const orbitZ = Math.cos(theta) * orbitRadius;
+      points.push(new THREE.Vector3(orbitX, 0, orbitZ));
+    }
+
+    orbitRef.current.geometry.setFromPoints(points);
   }, []);
 
   const toggleFollowingMercury = () => {
@@ -39,14 +49,13 @@ const Mercury = React.memo(() => {
     document.body.style.cursor = isHovered ? "pointer" : "auto";
   }, [isHovered]);
 
-  // useFrame is a Fiber hook that lets you execute code on every frame of Fiber's render loop.
   useFrame(({ camera }) => {
     updateMercuryPosition();
     const mercuryPositionRef = mercuryRef.current.position;
     const cameraTargetPosition = new THREE.Vector3(
       mercuryPositionRef.x + 2,
       mercuryPositionRef.y + 1,
-      mercuryPositionRef.z + 0,
+      mercuryPositionRef.z + 0
     );
 
     if (hoveringMercury) {
@@ -56,9 +65,21 @@ const Mercury = React.memo(() => {
   });
 
   return (
-    // Read more: https://docs.pmnd.rs/react-three-fiber/getting-started/your-first-scene#adding-a-mesh-component
-    // https://www.solarsystemscope.com/textures/
-    // Sphere geometry -> Radius, X-axis, Y-axis
+    <>
+      {/* Orbit Line */}
+      <lineSegments ref={orbitRef}>
+        <bufferGeometry attach="geometry" />
+        <lineBasicMaterial
+          attach="material"
+          color={0xffffff}
+          dashSize={1}
+          gapSize={0.5}
+          linewidth={1}
+          transparent
+          opacity={0.3}
+        />
+      </lineSegments>
+
       <mesh
         ref={mercuryRef}
         castShadow
@@ -67,7 +88,7 @@ const Mercury = React.memo(() => {
         onPointerOver={() => setIsHovered(true)}
         onPointerOut={() => setIsHovered(false)}
       >
-        <sphereGeometry args={[0.3, 128, 128]} />
+        <sphereGeometry args={[1, 128, 128]} />
         <meshPhongMaterial
           map={mercuryTexture}
           shininess={10}
@@ -76,6 +97,7 @@ const Mercury = React.memo(() => {
           emissive={0xffffff}
         />
       </mesh>
+    </>
   );
 });
 

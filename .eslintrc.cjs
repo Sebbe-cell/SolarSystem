@@ -16,5 +16,12 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
+    'no-unused-vars': 'off', // Add this line
+    'react/display-name': 'off', // Add this line
+    'react/prop-types': 'off', // Add this line
+    'react/no-unknown-property': 'off', // Add this line
+    'react-hooks/rules-of-hooks': 'off',
   },
 }
+
+/* eslint-disable react-hooks/rules-of-hooks */

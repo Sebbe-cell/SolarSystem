@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unknown-property */
 import { useRef } from "react";
 import { useHelper } from "@react-three/drei";
 import * as THREE from "three";
@@ -10,6 +9,8 @@ import { Perf } from "r3f-perf";
 import Venus from "./scenes/venus/Venus";
 import Mercury from "./scenes/mercury/Mercury";
 import Mars from "./scenes/mars/Mars";
+import Jupiter from "./scenes/jupiter/Jupiter";
+import Saturn from "./scenes/saturn/Saturn";
 // import CameraPositionLogging from "./helpers/cameraPositionLogging";
 
 const MainContainer = () => {
@@ -30,6 +31,8 @@ const MainContainer = () => {
       <Venus/>
       <Earth displacementScale={0.01} />
       <Mars/>
+      <Jupiter/>
+      <Saturn/>
     </>
   );
 };

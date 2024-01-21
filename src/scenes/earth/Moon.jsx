@@ -1,6 +1,3 @@
-/* eslint-disable react/display-name */
-/* eslint-disable react/no-unknown-property */
-
 import React, { useCallback, useRef } from "react";
 
 import { useTexture } from "@react-three/drei";
@@ -10,7 +7,7 @@ import * as THREE from "three";
 const Moon = React.memo(() => {
   const [moonTexture] = useTexture(["/assets/moon_map_8k.jpg"]);
 
-  const xAxis = 2;
+  const xAxis = 3.6;
   const moonSize = 0.2;
   const moonRef = useRef();
   const clockRef = useRef(new THREE.Clock());
@@ -18,9 +15,9 @@ const Moon = React.memo(() => {
   const updateMoonPosition = useCallback(() => {
     // Orbit Rotation
     moonRef.current.position.x =
-      Math.sin(clockRef.current.getElapsedTime() * 0.6) * xAxis;
+      Math.sin(clockRef.current.getElapsedTime() * 0.4) * xAxis;
     moonRef.current.position.z =
-      Math.cos(clockRef.current.getElapsedTime() * 0.6) * xAxis;
+      Math.cos(clockRef.current.getElapsedTime() * 0.4) * xAxis;
 
     // Axis Rotation
     moonRef.current.rotation.y += 0.0003;

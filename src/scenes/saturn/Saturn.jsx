@@ -1,42 +1,33 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useFrame, useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
-import Moon from "./Moon";
-import Iss from "./ISS";
 import * as THREE from "three";
+import SaturnsRings from "./SaturnsRings";
 
-const Earth = React.memo(({ displacementScale }) => {
+const Saturn = React.memo(() => {
   const [isHovered, setIsHovered] = useState(false);
-  const [hoveringEarth, setHoveringEarth] = useState(false);
+  const [hoveringSaturn, sethoveringSaturn] = useState(false);
 
   const [
-    earthTexture,
-    earthNormalMap,
-    earthSpecularMap,
-    earthDisplacementMap,
-    earthEmissiveMap,
+    saturnTexture,
   ] = useLoader(TextureLoader, [
-    "/assets/earth_8k.jpg",
-    "/assets/earth-normal_2k.jpg",
-    "/assets/earth_specular_map_2k.jpg",
-    "/assets/earth_displacement_map.jpg",
-    "/assets/earth_night_map_8k.jpg",
+    "/assets/saturn_map_8k.jpg",
   ]);
 
-  const earthRef = useRef();
+  const saturnRef = useRef();
   const orbitRef = useRef();
   const clockRef = useRef(new THREE.Clock());
 
-  const updateEarthPosition = useCallback(() => {
-    // Calculate the Earth´s position based on its angle from the Sun.
-    const angle = clockRef.current.getElapsedTime() * 0.1;
-    const distance = 30;
+  const updateSaturnPosition = useCallback(() => {
+    // Calculate Saturn´s position based on its angle from the Sun.
+    const angle = clockRef.current.getElapsedTime() * 0.01;
+    const distance = 66;
     const x = Math.sin(angle) * distance;
     const z = Math.cos(angle) * distance;
 
-    earthRef.current.position.set(x, 0, z);
+    saturnRef.current.position.set(x, 0, z);
 
-    earthRef.current.rotation.y += 0.001;
+    saturnRef.current.rotation.y += 0.001;
 
     // Update the orbit line
     const points = [];
@@ -53,8 +44,8 @@ const Earth = React.memo(({ displacementScale }) => {
     orbitRef.current.geometry = orbitGeometry;
   }, []);
 
-  const toggleFollowingEarth = () => {
-    setHoveringEarth((prevHoveringEarth) => !prevHoveringEarth);
+  const toggleFollowingSaturn = () => {
+    sethoveringSaturn((prevhoveringSaturn) => !prevhoveringSaturn);
   };
 
   useEffect(() => {
@@ -63,16 +54,16 @@ const Earth = React.memo(({ displacementScale }) => {
 
   // useFrame is a Fiber hook that lets you execute code on every frame of Fiber's render loop.
   useFrame(({ camera }) => {
-    updateEarthPosition();
-    const earthPositionRef = earthRef.current.position;
+    updateSaturnPosition();
+    const saturnPositionRef = saturnRef.current.position;
     const cameraTargetPosition = new THREE.Vector3(
-      earthPositionRef.x + 3,
-      earthPositionRef.y + 2,
-      earthPositionRef.z + 5
+      saturnPositionRef.x + 3,
+      saturnPositionRef.y + 2,
+      saturnPositionRef.z + 5
     );
 
-    if (hoveringEarth) {
-      camera.lookAt(earthPositionRef);
+    if (hoveringSaturn) {
+      camera.lookAt(saturnPositionRef);
       camera.position.copy(cameraTargetPosition);
     }
   });
@@ -91,37 +82,26 @@ const Earth = React.memo(({ displacementScale }) => {
           opacity={0.3}
         />
       </lineSegments>
-      {/* Read more:
-      https://docs.pmnd.rs/react-three-fiber/getting-started/your-first-scene#adding-a-mesh-component
-      https://www.solarsystemscope.com/textures/ // Sphere geometry ->
-      Radius, X-axis, Y-axis */}
-      <group position={[0, 0, 0]} ref={earthRef}>
+      <group position={[0, 0, 0]} ref={saturnRef}>
         <mesh
           castShadow
           receiveShadow
-          onClick={toggleFollowingEarth}
+          onClick={toggleFollowingSaturn}
           onPointerOver={() => setIsHovered(true)}
           onPointerOut={() => setIsHovered(false)}
         >
-          <sphereGeometry args={[1.8, 128, 128]} />
+          <sphereGeometry args={[2.6, 128, 128]} />
           <meshPhongMaterial
-            map={earthTexture}
-            normalMap={earthNormalMap}
-            // ------------- Not used, performance takes a bit hit ------------- \\
-            // specularMap={earthSpecularMap}
-            // displacementMap={earthDisplacementMap}
-            displacementScale={displacementScale}
+            map={saturnTexture}
             shininess={10}
-            emissiveMap={earthEmissiveMap}
-            emissiveIntensity={isHovered ? 10 : 1.5}
+            emissiveIntensity={isHovered ? 0.02 : 0.01}
             emissive={0xffffff}
           />
         </mesh>
-        <Iss />
-        <Moon />
+        <SaturnsRings/>
       </group>
     </>
   );
 });
 
-export default Earth;
+export default Saturn;

@@ -1,5 +1,3 @@
-/* eslint-disable react/no-unknown-property */
-/* eslint-disable react/display-name */
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
@@ -21,7 +19,7 @@ const Mars = React.memo(() => {
   const updateMarsPosition = useCallback(() => {
     // Calculate the Mars position based on its angle from the Sun.
     const angle = clockRef.current.getElapsedTime() * 0.06;
-    const distance = 50;
+    const distance = 45;
     const x = Math.sin(angle) * distance;
     const z = Math.cos(angle) * distance;
 
@@ -91,7 +89,7 @@ const Mars = React.memo(() => {
         onPointerOver={() => setIsHovered(true)}
         onPointerOut={() => setIsHovered(false)}
       >
-        <sphereGeometry args={[0.8, 128, 128]} />
+        <sphereGeometry args={[1.4, 128, 128]} />
         <meshPhongMaterial
           map={marsTexture}
           shininess={10}

@@ -1,7 +1,3 @@
-/* eslint-disable react/display-name */
-/* eslint-disable react/no-unknown-property */
-/* eslint-disable react-hooks/rules-of-hooks */
-
 import React, { useCallback, useMemo, useRef } from "react";
 
 import { useGLTF } from "@react-three/drei";

@@ -3,29 +3,28 @@ import { useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-const Venus = React.memo(() => {
+const Jupiter = React.memo(() => {
   const [isHovered, setIsHovered] = useState(false);
-  const [hoveringVenus, sethoveringVenus] = useState(false);
+  const [hoveringJupiter, sethoveringJupiter] = useState(false);
 
-  const [venusTexture, venusEmissiveMap] = useTexture([
-    "/assets/venus_map_8k.jpg",
-    "/assets/venus_map_8k.jpg",
+  const [jupiterTexture, jupiterEmissiveMap] = useTexture([
+    "/assets/jupiter_map_8k.jpg",
+    "/assets/jupiter_map_8k.jpg",
   ]);
 
+  const jupiterRef = useRef();
   const orbitRef = useRef();
-  const venusRef = useRef();
   const clockRef = useRef(new THREE.Clock());
 
-  const updateVenusPosition = useCallback(() => {
-    // Calculate Venus position based on its angle from the Sun.
-    const angle = clockRef.current.getElapsedTime() * 0.3;
-    const distance = 18;
+  const updateJupiterPosition = useCallback(() => {
+    // Calculate Jupiter´s position based on its angle from the Sun.
+    const angle = clockRef.current.getElapsedTime() * 0.02;
+    const distance = 56;
     const x = Math.sin(angle) * distance;
     const z = Math.cos(angle) * distance;
 
-    venusRef.current.position.set(x, 0, z);
-
-    venusRef.current.rotation.y += 0.003;
+    jupiterRef.current.position.set(x, 0, z);
+    jupiterRef.current.rotation.y += 0.0003;
 
     // Update the orbit line
     const points = [];
@@ -41,25 +40,26 @@ const Venus = React.memo(() => {
     orbitRef.current.geometry.setFromPoints(points);
   }, []);
 
-  const toggleFollowingVenus = () => {
-    sethoveringVenus((prevhoveringVenus) => !prevhoveringVenus);
+  const toggleFollowingJupiter = () => {
+    sethoveringJupiter((prevhoveringJupiter) => !prevhoveringJupiter);
   };
 
   useEffect(() => {
     document.body.style.cursor = isHovered ? "pointer" : "auto";
   }, [isHovered]);
 
+  // useFrame is a Fiber hook that lets you execute code on every frame of Fiber's render loop.
   useFrame(({ camera }) => {
-    updateVenusPosition();
-    const venusPositionRef = venusRef.current.position;
+    updateJupiterPosition();
+    const jupiterPositionRef = jupiterRef.current.position;
     const cameraTargetPosition = new THREE.Vector3(
-      venusPositionRef.x + 3,
-      venusPositionRef.y + 2,
-      venusPositionRef.z + 5
+      jupiterPositionRef.x + 3,
+      jupiterPositionRef.y + 3,
+      jupiterPositionRef.z + 6
     );
 
-    if (hoveringVenus) {
-      camera.lookAt(venusPositionRef);
+    if (hoveringJupiter) {
+      camera.lookAt(jupiterPositionRef);
       camera.position.copy(cameraTargetPosition);
     }
   });
@@ -80,20 +80,21 @@ const Venus = React.memo(() => {
         />
       </lineSegments>
 
+      {/* Jupiter Sphere */}
       <mesh
-        ref={venusRef}
+        ref={jupiterRef}
         castShadow
         receiveShadow
-        onClick={toggleFollowingVenus}
+        onClick={toggleFollowingJupiter}
         onPointerOver={() => setIsHovered(true)}
         onPointerOut={() => setIsHovered(false)}
       >
-        <sphereGeometry args={[1.3, 128, 128]} />
+        <sphereGeometry args={[3, 128, 128]} />
         <meshPhongMaterial
-          map={venusTexture}
+          map={jupiterTexture}
           shininess={10}
-          emissiveMap={venusEmissiveMap}
-          emissiveIntensity={isHovered ? 1.4 : 0.1}
+          emissiveMap={jupiterEmissiveMap}
+          emissiveIntensity={isHovered ? 1 : 0.01}
           emissive={0xffffff}
         />
       </mesh>
@@ -101,4 +102,4 @@ const Venus = React.memo(() => {
   );
 });
 
-export default Venus;
+export default Jupiter;
