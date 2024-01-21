@@ -7,7 +7,7 @@ import AnimatedStars from "./AnimatedStars";
 import Earth from "./scenes/earth/Earth";
 import Sun from "./scenes/sun/Sun";
 import { Perf } from "r3f-perf";
-import Venus from "./scenes/venus/venus";
+import Venus from "./scenes/venus/Venus";
 import Mercury from "./scenes/mercury/Mercury";
 import Mars from "./scenes/mars/Mars";
 // import CameraPositionLogging from "./helpers/cameraPositionLogging";
