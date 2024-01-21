@@ -1,9 +1,16 @@
 /* eslint-disable react/no-unknown-property */
+import { useRef } from "react";
 import { useHelper } from "@react-three/drei";
+import * as THREE from "three";
+
 import AnimatedStars from "./AnimatedStars";
 import Earth from "./scenes/earth/Earth";
-import { useRef } from "react";
-import * as THREE from "three";
+import Sun from "./scenes/sun/Sun";
+import { Perf } from "r3f-perf";
+import Venus from "./scenes/venus/venus";
+import Mercury from "./scenes/mercury/Mercury";
+import Mars from "./scenes/mars/Mars";
+// import CameraPositionLogging from "./helpers/cameraPositionLogging";
 
 const MainContainer = () => {
   const directionalLightRef = useRef();
@@ -14,22 +21,15 @@ const MainContainer = () => {
 
   return (
     <>
-      <color attach="background" args={["black"]} />
+      <Perf />
+      {/* <CameraPositionLogging event="mousedown"/> */}
       <AnimatedStars />
-      <directionalLight
-        castShadow
-        ref={directionalLightRef}
-        position={[0, 0, 40]}
-        intensity={1}
-        // color={0xff0000}
-      />
-      <directionalLight
-        castShadow
-        ref={directionalLightRefTwo}
-        position={[0, 0, -40]}
-      />
-      {/* <ambientLight/> */}
+      <ambientLight intensity={0.1}/>
+      <Sun />
+      <Mercury/>
+      <Venus/>
       <Earth displacementScale={0.01} />
+      <Mars/>
     </>
   );
 };
